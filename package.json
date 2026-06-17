@@ -1,0 +1,15 @@
+{
+  "name": "bunny-dealer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.0.0",
+    "mongoose": "^8.9.0",
+    "ms": "^2.1.3"
+  }
+}
