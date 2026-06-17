@@ -2,8 +2,8 @@ require("dotenv").config();
 
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const mongoose = require("mongoose");
-const { loadCommands } = require("./src/handlers/commandHandler");
-const { loadEvents } = require("./src/handlers/eventHandler");
+const { loadCommands } = require("commandHandler");
+const { loadEvents } = require("eventHandler");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
