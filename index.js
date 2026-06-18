@@ -15,7 +15,7 @@ client.startTime = Date.now();
 
 async function main() {
   try {
-    await mongoose.connect(process.env.MONGODB_URL);
+    await mongoose.connect(process.env.mongodb+srv://t08234713_db_user:TKBOSS333@cluster0.ndonxzn.mongodb.net/?appName=Cluster0);
     console.log("🌿 Connected to MongoDB");
 
     await loadCommands(client);
