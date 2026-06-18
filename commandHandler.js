@@ -2,31 +2,34 @@ const fs = require("fs");
 const path = require("path");
 
 async function loadCommands(client) {
-  const commandsPath = path.join(__dirname, "../commands");
-  let loaded = 0;
+    let loaded = 0;
 
-  function readDir(dir) {
-    const files = fs.readdirSync(dir);
+    const files = fs.readdirSync(__dirname);
+
     for (const file of files) {
-      const fullPath = path.join(dir, file);
-      if (fs.statSync(fullPath).isDirectory()) {
-        readDir(fullPath);
-      } else if (file.endsWith(".js")) {
-        try {
-          const command = require(fullPath);
-          if (command.data && command.execute) {
-            client.commands.set(command.data.name, command);
-            loaded++;
-          }
-        } catch (e) {
-          console.error(`Failed to load command ${file}:`, e);
-        }
-      }
-    }
-  }
+        if (
+            file.endsWith(".js") &&
+            ![
+                "index.js",
+                "commandHandler.js",
+                "eventHandler.js",
+                "deploy-commands.js"
+            ].includes(file)
+        ) {
+            try {
+                const command = require(path.join(__dirname, file));
 
-  readDir(commandsPath);
-  console.log(`🐰 Loaded ${loaded} commands`);
+                if (command.data && command.execute) {
+                    client.commands.set(command.data.name, command);
+                    loaded++;
+                }
+            } catch (err) {
+                console.error(`Failed to load ${file}:`, err);
+            }
+        }
+    }
+
+    console.log(`📦 Loaded ${loaded} commands`);
 }
 
 module.exports = { loadCommands };
