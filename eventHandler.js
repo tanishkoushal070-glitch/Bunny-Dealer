@@ -2,21 +2,41 @@ const fs = require("fs");
 const path = require("path");
 
 async function loadEvents(client) {
-  const eventsPath = path.join(__dirname, "../events");
-  const files = fs.readdirSync(eventsPath).filter((f) => f.endsWith(".js"));
-  let loaded = 0;
+    let loaded = 0;
 
-  for (const file of files) {
-    const event = require(path.join(eventsPath, file));
-    if (event.once) {
-      client.once(event.name, (...args) => event.execute(...args, client));
-    } else {
-      client.on(event.name, (...args) => event.execute(...args, client));
+    const files = fs.readdirSync(__dirname);
+
+    for (const file of files) {
+        if (
+            [
+                "ready.js",
+                "interactionCreate.js",
+                "messageCreate.js"
+            ].includes(file)
+        ) {
+            try {
+                const event = require(path.join(__dirname, file));
+
+                if (event.name && event.execute) {
+                    if (event.once) {
+                        client.once(event.name, (...args) =>
+                            event.execute(...args, client)
+                        );
+                    } else {
+                        client.on(event.name, (...args) =>
+                            event.execute(...args, client)
+                        );
+                    }
+
+                    loaded++;
+                }
+            } catch (err) {
+                console.error(`Failed to load event ${file}:`, err);
+            }
+        }
     }
-    loaded++;
-  }
 
-  console.log(`🎪 Loaded ${loaded} events`);
+    console.log(`🎪 Loaded ${loaded} events`);
 }
 
 module.exports = { loadEvents };
